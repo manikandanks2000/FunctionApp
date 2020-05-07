@@ -20,3 +20,22 @@ steps:
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
+
+
+- task: AzureFunctionApp@1
+  inputs:
+    azureSubscription: 'ManiSubscription(c80dc98e-f2db-444d-8f96-717d1999c4f8)'
+    appType: functionAppLinux
+    appName: 'manitest123-appfunction'
+    package: $(System.ArtifactsDirectory)/**/*.zip
+    deployToSlotOrASE: true
+    resourceGroupName: <Name of the resource group>
+    slotName: staging
+
+- task: AzureAppServiceManage@0
+  inputs:
+    azureSubscription: 'ManiSubscription(c80dc98e-f2db-444d-8f96-717d1999c4f8)'
+    WebAppName: 'java-functions-20200504231146325'
+    ResourceGroupName: 'java-functions-group'
+    SourceSlot: staging
+    SwapWithProduction: true    
