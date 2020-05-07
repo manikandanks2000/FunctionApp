@@ -27,7 +27,7 @@ steps:
     azureSubscription: 'ManiSubscription(c80dc98e-f2db-444d-8f96-717d1999c4f8)'
     appType: functionAppLinux
     appName: 'java-functions-20200504231146325'
-    package: $(System.ArtifactsDirectory)/**/*.zip
+    package: $(System.ArtifactsDirectory)/**/*.jar
     deployToSlotOrASE: true
     resourceGroupName: 'java-functions-group'
     slotName: staging
@@ -35,7 +35,7 @@ steps:
 - task: AzureAppServiceManage@0
   inputs:
     azureSubscription: 'ManiSubscription(c80dc98e-f2db-444d-8f96-717d1999c4f8)'
-    WebAppName: 'java-functions-20200504231146325'
+    WebAppName: 'java-functions-app-service-plan'
     ResourceGroupName: 'java-functions-group'
     SourceSlot: staging
     SwapWithProduction: true    
