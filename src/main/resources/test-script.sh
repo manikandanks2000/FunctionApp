@@ -1,0 +1,1 @@
+echo "sample script output"
