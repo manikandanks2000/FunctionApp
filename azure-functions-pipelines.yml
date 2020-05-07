@@ -26,7 +26,7 @@ steps:
   inputs:
     azureSubscription: 'ManiSubscription(c80dc98e-f2db-444d-8f96-717d1999c4f8)'
     appType: functionAppLinux
-    appName: 'manitest123-appfunction'
+    appName: 'java-functions-20200504231146325'
     package: $(System.ArtifactsDirectory)/**/*.zip
     deployToSlotOrASE: true
     resourceGroupName: 'java-functions-group'
