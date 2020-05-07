@@ -29,14 +29,6 @@ steps:
     slotName: 'production'
     package: '$(System.DefaultWorkingDirectory)/**/*.zip'
 
-- task: AzureFunctionApp@1
-  inputs:
-    appType: 'functionAppLinux'
-    appName: 'manitest123-appfunction'
-    deployToSlotOrASE: true
-    resourceGroupName: 'appservice-rg-new'
-    slotName: 'production'
-    package: '$(System.DefaultWorkingDirectory)/**/*.zip'
 
 - task: Maven@3
   inputs:
