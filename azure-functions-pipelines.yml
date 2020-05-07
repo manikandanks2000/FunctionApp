@@ -29,7 +29,7 @@ steps:
     appName: 'manitest123-appfunction'
     package: $(System.ArtifactsDirectory)/**/*.zip
     deployToSlotOrASE: true
-    resourceGroupName: <Name of the resource group>
+    resourceGroupName: 'java-functions-group'
     slotName: staging
 
 - task: AzureAppServiceManage@0
