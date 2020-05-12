@@ -1,0 +1,16 @@
+apiVersion : apps/v1beta1
+kind: Deployment
+metadata:
+  name: "kubernetesfunctions"
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: "kubernetesfunctions"
+    spec:
+      containers:
+        - name: "kubernetesfunctions"
+          image: "functionapp.azurecr.io/kubernetesfunctions"
+          ports:
+          - containerPort: 80
