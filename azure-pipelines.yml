@@ -74,5 +74,5 @@ stages:
                 $(Pipeline.Workspace)/manifests/service.yml
               containers: '$(containerRegistry)/$(imageRepository):$(tag)'
               imagePullSecrets: '$(imagePullSecret)'
-              rolloutStatusTimeout: '3'
+              rolloutStatusTimeout: '60'
 
