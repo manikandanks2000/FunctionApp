@@ -69,22 +69,44 @@ public class HttpTriggerBlobFunction {
             @HttpTrigger(name = "req", methods = {HttpMethod.GET, HttpMethod.POST}, authLevel = AuthorizationLevel.ANONYMOUS) HttpRequestMessage<Optional<String>> request,
             final ExecutionContext context) throws Exception {
     	 	context.getLogger().info("Java HTTP trigger processed a request.");
-
+    	    File sourceFile = null,uploadFile=null;
+    	    String currentfilecontent="",newfilecontent="";
     	 	String str="";
     	 	try {
-    	 		blobActivities(context);		
+    	 		CloudBlobContainer container=blobActivities(context);		
 				context.getLogger().info("blob operation completed");
+			  	 sourceFile=createSampleFile(context, "sourceinput",".log");
+			  	 uploadFile = new File(sourceFile.getParentFile(),"sourceoutput.log");
+			  	 CloudBlockBlob bloboutput = container.getBlockBlobReference(uploadFile.getName());
+			  	 this.uploadBobFile(container, sourceFile, context);
+	   			currentfilecontent=this.downloadBobFile(container, sourceFile, context);
+	 			context.getLogger().info("download the sample file content "+currentfilecontent);
+				newfilecontent=StringUtils.replace(currentfilecontent,"Sample","mani");
+				context.getLogger().info("Uploading the sample file ");
+				Writer output = new BufferedWriter(new FileWriter(uploadFile));
+				output.write("writing to new file");
+	    		
+	     		output.write(newfilecontent);
+	     		
+	    		output.close();
+	    		bloboutput.uploadFromFile(uploadFile.getAbsolutePath());	
+	    	
+	    		
+				context.getLogger().info("Uploading the sample file content"+newfilecontent);
+
+	   			 
     	 	} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-    	 	return request.createResponseBuilder(HttpStatus.OK).body("Hello, mani appsrvice"+str).build();
+    	 	return request.createResponseBuilder(HttpStatus.OK).body("Azure Blob Service\n"+"CurrentFile Content:"+"\n"+currentfilecontent+"\n"+"NewFile Content:"+"\n"+newfilecontent).build();
+       	 
           }
    
            
-    private void blobActivities(ExecutionContext context) throws IOException {
+    private CloudBlobContainer blobActivities(ExecutionContext context) throws IOException {
         context.getLogger().info("blob operation started");
-        File sourceFile = null;
+    
 		context.getLogger().info("Azure Blob storage quick start sample");
         String storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=storageaccountappse9f37;AccountKey=V7MpL3NoZpHnz26xRIT9wlcARKuMM1E4W+ZSRuNJfOnjGTS47coDRYFs3FxCcc/abyJzYZJZcP7e30gBu3JO0w==";
  		CloudStorageAccount storageAccount;
@@ -93,14 +115,11 @@ public class HttpTriggerBlobFunction {
 
        
      	try {
-     		CloudFileClient fileClient = FileClientProvider.getFileClientReference();
-  	    	CloudFileShare share = fileClient.getShareReference("manishare");	
-			storageAccount = CloudStorageAccount.parse(storageConnectionString);
+  	    	storageAccount = CloudStorageAccount.parse(storageConnectionString);
 
-		blobClient = storageAccount.createCloudBlobClient();
-		container = blobClient.getContainerReference("quickstartcontainer");
-
-		// Create the container if it does not exist with public access.
+  	    	blobClient = storageAccount.createCloudBlobClient();
+  	    	container = blobClient.getContainerReference("manishare");
+  		// Create the container if it does not exist with public access.
 		context.getLogger().info("Creating container: " + container.getName());
 		container.createIfNotExists(new BlobRequestOptions(), new OperationContext());		 
 	    context.getLogger().info("blob container created"+container.getName());
@@ -118,33 +137,90 @@ public class HttpTriggerBlobFunction {
          * (inherited from containerClient). Note that blob names can be mixed case.
          */
 
-		//Creating a sample file
-		sourceFile = File.createTempFile("sampleFile", ".txt");
-		context.getLogger().info("Creating a sample file at: " + sourceFile.toString());
-		Writer output = new BufferedWriter(new FileWriter(sourceFile));
-		output.write("Hello Azure!");
-		output.close();
+     	return container;
 		
-		try {
-		//Getting a blob reference
-		CloudBlockBlob blob = container.getBlockBlobReference(sourceFile.getName());
 
-		//Creating blob and uploading file to it
-		context.getLogger().info("Uploading the sample file ");
-
-			blob.uploadFromFile(sourceFile.getAbsolutePath());
-		} catch (StorageException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		//Listing contents of container
-		for (ListBlobItem blobItem : container.listBlobs()) {
-		context.getLogger().info("URI of blob is: " + blobItem.getUri());
-		}
     }
+    
+    
+	 public String downloadBobFile(CloudBlobContainer container, File sourceFile,ExecutionContext context) {
+		 
+			String currentfilestr="";			
+			
+			try {
+				//Getting a blob reference
+				CloudBlockBlob blobinput = container.getBlockBlobReference(sourceFile.getName());
+				File uploadFile = new File(sourceFile.getParentFile(),"sourceoutput.log");
+				CloudBlockBlob bloboutput = container.getBlockBlobReference(uploadFile.getName());
+				
+				//Creating blob and uploading file to it
+				
+
+				blobinput.uploadFromFile(sourceFile.getAbsolutePath());
+					//String blob.downloadText();
+
+					File downloadedFile = new File(sourceFile.getParentFile(), "sourceinput.log");
+					blobinput.downloadToFile(downloadedFile.getAbsolutePath());
+					currentfilestr=blobinput.downloadText();
+						} catch (StorageException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (URISyntaxException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				//Listing contents of container
+				for (ListBlobItem blobItem : container.listBlobs()) {
+				context.getLogger().info("URI of blob is: " + blobItem.getUri());
+				}
+ 		 return currentfilestr;
+ 	 }
         
+	 
+	 public void uploadBobFile(CloudBlobContainer container, File file,ExecutionContext context) {
+			try {
+				//Getting a blob reference
+				
+				CloudBlockBlob bloboutput = container.getBlockBlobReference(file.getName());
+	    		bloboutput.uploadFromFile(file.getAbsolutePath());	
+					context.getLogger().info("Uploading the blob file"+bloboutput.getName());
+				} catch (StorageException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (URISyntaxException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				//Listing contents of container
+				for (ListBlobItem blobItem : container.listBlobs()) {
+				context.getLogger().info("URI of blob is: " + blobItem.getUri());
+				}
+		 
+	 }
+
+	 
+	 
+	 
+    	public File createSampleFile(ExecutionContext context,String FileName,String fileExt) {
+    	    File sourceFile = null;
+    		//Creating a sample file
+    		try {
+    	        sourceFile = new File(FileName);
+	
+    		context.getLogger().info("Creating a sample file at: " + sourceFile.toString());
+    		Writer output = new BufferedWriter(new FileWriter(sourceFile));
+    		output.write("Hello Azure! Sample Content\n");
+       		output.write("Hello Azure! Sample Content\n");
+       		output.write("Hello Azure! Sample Content\n");
+    		output.close();
+    		} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return sourceFile;
+    	}
+    	
+    	
 }

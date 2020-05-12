@@ -69,8 +69,6 @@ public class HttpTriggerFileShareFunction {
     	 	String currentfile="scriptinput.log";
     	 	String newfile="scriptoutput.log";
     	 	String fileshare="manishare";
-    	 	
-    	  	 	
     	 	try {
     	 	    context.getLogger().info("GET parameters are: " + request.getQueryParameters());
     	 	    name = request.getQueryParameters().getOrDefault("name", "");
@@ -94,7 +92,7 @@ public class HttpTriggerFileShareFunction {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-    	 	return request.createResponseBuilder(HttpStatus.OK).body("CurrentFile Content:"+"\n"+currentfilestr+"\n"+"NewFile Content:"+"\n"+newfilecontent).build();
+    	 	return request.createResponseBuilder(HttpStatus.OK).body("Azure FileShare service\n"+"CurrentFile Content:"+"\n"+currentfilestr+"\n"+"NewFile Content:"+"\n"+newfilecontent).build();
           }
 
 
