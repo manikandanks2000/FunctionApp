@@ -1,0 +1,50 @@
+on: [push]
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    
+    - uses: azure/docker-login@v1
+      with:
+        login-server: functionapp.azurecr.io
+        username: ${{ secrets.acr_functionapp_username }}
+        password: ${{ secrets.acr_functionapp_password }}
+    
+    - name: Build and push image to ACR
+      id: build-image
+      run: |
+        docker build "$GITHUB_WORKSPACE/" -f  "Dockerfile" -t functionapp.azurecr.io/kubernetesfunctions:${{ github.sha }}
+        docker push functionapp.azurecr.io/kubernetesfunctions:${{ github.sha }}
+    
+    - uses: azure/k8s-set-context@v1
+      with:
+         kubeconfig: ${{ secrets.aks_kubernetesfunctions_kubeConfig }}
+      id: login
+    
+    - name: Create namespace
+      run: |
+        namespacePresent=`kubectl get namespace | grep kubernetesfunctionsc409 | wc -l`
+        if [ $namespacePresent -eq 0 ]
+        then
+            echo `kubectl create namespace kubernetesfunctionsc409`
+        fi
+
+    - uses: azure/k8s-create-secret@v1
+      with:
+        namespace: kubernetesfunctionsc409
+        container-registry-url: functionapp.azurecr.io
+        container-registry-username: ${{ secrets.acr_functionapp_username }}
+        container-registry-password: ${{ secrets.acr_functionapp_password }}
+        secret-name: kubernetesfudockerauth
+       
+    - uses: azure/k8s-deploy@v1
+      with:
+        namespace: kubernetesfunctionsc409
+        manifests: |
+          manifests/deployment-4.yml
+          manifests/service-4.yml
+        images: |
+          functionapp.azurecr.io/kubernetesfunctions:${{ github.sha }}
+        imagepullsecrets: |
+          kubernetesfudockerauth
