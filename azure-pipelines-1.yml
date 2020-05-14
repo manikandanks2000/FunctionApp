@@ -12,7 +12,7 @@ variables:
 
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: 'cbcf20df-93b2-43d5-a2f4-3ce84a2194aa'
-  imageRepository: 'manikandanksfunctionapp:1.0'
+  imageRepository: 'manikandanksfunctionapp'
   containerRegistry: 'functionapp.azurecr.io'
   dockerfilePath: '**/Dockerfile'
   tag: '$(Build.BuildId)'
