@@ -63,31 +63,29 @@ public class HttpTriggerBlobFunction {
     public static final String storageConnectionString ="DefaultEndpointsProtocol=http;AccountName=storageaccountappse9f37;AccountKey=V7MpL3NoZpHnz26xRIT9wlcARKuMM1E4W+ZSRuNJfOnjGTS47coDRYFs3FxCcc/abyJzYZJZcP7e30gBu3JO0w==";
 
       static Logger LOGGER = LoggerFactory.getLogger(HttpTriggerBlobFunction.class);
-
+	    File sourceFile = null,uploadFile=null;
+	    String currentfilecontent="",newfilecontent="";
+	 	String str="";
      @FunctionName("HttpBlobStorageFunction")
     public HttpResponseMessage run(
             @HttpTrigger(name = "req", methods = {HttpMethod.GET, HttpMethod.POST}, authLevel = AuthorizationLevel.ANONYMOUS) HttpRequestMessage<Optional<String>> request,
             final ExecutionContext context) throws Exception {
     	 	context.getLogger().info("Java HTTP trigger processed a request.");
-    	    File sourceFile = null,uploadFile=null;
-    	    String currentfilecontent="",newfilecontent="";
-    	 	String str="";
+
     	 	try {
     	 		CloudBlobContainer container=blobActivities(context);		
 				context.getLogger().info("blob operation completed");
-			  	 sourceFile=createSampleFile(context, "sourceinput",".log");
+			  	 sourceFile=createSampleFile(context, "sourceinput.log");
+			  	 this.uploadBobFile(container, sourceFile, context);
 			  	 uploadFile = new File(sourceFile.getParentFile(),"sourceoutput.log");
 			  	 CloudBlockBlob bloboutput = container.getBlockBlobReference(uploadFile.getName());
-			  	 this.uploadBobFile(container, sourceFile, context);
-	   			currentfilecontent=this.downloadBobFile(container, sourceFile, context);
+				currentfilecontent=this.downloadBobFile(container, sourceFile, context);
 	 			context.getLogger().info("download the sample file content "+currentfilecontent);
 				newfilecontent=StringUtils.replace(currentfilecontent,"Sample","mani");
 				context.getLogger().info("Uploading the sample file ");
 				Writer output = new BufferedWriter(new FileWriter(uploadFile));
-				output.write("writing to new file");
-	    		
+			//	output.write("writing to new file");
 	     		output.write(newfilecontent);
-	     		
 	    		output.close();
 	    		bloboutput.uploadFromFile(uploadFile.getAbsolutePath());	
 	    	
@@ -183,8 +181,14 @@ public class HttpTriggerBlobFunction {
 				//Getting a blob reference
 				
 				CloudBlockBlob bloboutput = container.getBlockBlobReference(file.getName());
+			
+				if(bloboutput.deleteIfExists()) {
+					context.getLogger().info("delete existing file if any");
 	    		bloboutput.uploadFromFile(file.getAbsolutePath());	
+	    		
+				}
 					context.getLogger().info("Uploading the blob file"+bloboutput.getName());
+					
 				} catch (StorageException | IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -203,7 +207,7 @@ public class HttpTriggerBlobFunction {
 	 
 	 
 	 
-    	public File createSampleFile(ExecutionContext context,String FileName,String fileExt) {
+    	public File createSampleFile(ExecutionContext context,String FileName) {
     	    File sourceFile = null;
     		//Creating a sample file
     		try {
