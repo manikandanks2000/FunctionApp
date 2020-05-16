@@ -75,13 +75,11 @@ public class HttpTriggerJavaBatch {
     	 	String newfile="scriptoutput.log";
     	 	String fileshare="manishare";
     	 	
-    
-    	 	
-    	 	String dbConnection=System.getenv("DBConnection");
-    	 	context.getLogger().info("DBConnection conection string"+dbConnection);
-     	   	
-    	 	String connectionUrl1=System.getenv("DatabaseConnectionString");
-    	 	context.getLogger().info("db conection string"+connectionUrl1);
+//    	 	String dbConnection=loadProperties();
+//    	 	context.getLogger().info("DBConnection conection string"+dbConnection);
+//     	   	
+//   	 	String connectionUrl1=System.getenv("DatabaseConnectionString");
+    //	 	context.getLogger().info("db conection string"+connectionUrl1);
     	 	
  			String connectionUrl = "jdbc:sqlserver://manisqlserver.database.windows.net:1433;" + "database=manisqldatabase;"
  					+ "user=dbuser;" + "password=mani4YOU!@;" + "encrypt=true;" + "trustServerCertificate=true;"
@@ -286,6 +284,26 @@ public class HttpTriggerJavaBatch {
             }
             return str;
         }
-     
-        
+
+        public String loadProperties() {
+        	 String Dbconnection=";";
+            try (InputStream input = new FileInputStream("src//main//resources//loadconfig.properties")) {
+
+                Properties prop = new Properties();
+
+                // load a properties file
+                prop.load(input);
+
+                // get the property value and print it out
+                Dbconnection=prop.getProperty("DbConnectionString");
+                System.out.println("Dbconnection"+Dbconnection);
+ 
+
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        	 return Dbconnection;
+        }
 }
+        
+
