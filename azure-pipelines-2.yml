@@ -66,5 +66,5 @@ stages:
         action: 'deploy'
         kubernetesServiceConnection: 'kube-connection'
         namespace: 'default'
-        manifests: '$(System.ArtifactsDirectory)/configuration/kubernetes/deployment.yaml'
-        containers: 'manikandanks2000/kubernetes-functions:$(tag)'
+        manifests: '$(System.ArtifactsDirectory)/manifests/deployment.yaml'
+        containers: 'functionapp:$(tag)'
