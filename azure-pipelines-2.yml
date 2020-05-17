@@ -21,7 +21,7 @@ variables:
 
 stages:
 - stage: Build
-  displayName: Build and push stage1
+  displayName: Build and push docker
   jobs:  
   - job: Build
     displayName: Build
@@ -47,10 +47,10 @@ stages:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'manifests'
         publishLocation: 'Container'
-  - stage: Deploy
+- stage: Deploy
   displayName: Deploy image to AKS
   jobs:  
-  - job: Deploy
+  - job: DeploytoAKS
     displayName: Deploy to AKS
     pool:
       vmImage: 'ubuntu-latest'
