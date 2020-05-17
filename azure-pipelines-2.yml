@@ -48,10 +48,10 @@ stages:
         ArtifactName: 'manifests'
         publishLocation: 'Container'
   - stage: Deploy
-  displayName: Deploy image2
+  displayName: Deploy image to AKS
   jobs:  
   - job: Deploy
-    displayName: Deploy
+    displayName: Deploy to AKS
     pool:
       vmImage: 'ubuntu-latest'
     steps:
