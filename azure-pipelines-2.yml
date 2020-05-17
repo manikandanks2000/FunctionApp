@@ -10,8 +10,8 @@ resources:
 
 variables:
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: 'ManiSubscription-serviceconnection'
-  imageRepository: 'manikandanksfunctionapp'
+  dockerRegistryServiceConnection: 'functionapp'
+  imageRepository: 'kubernetesfunctions'
   containerRegistry: 'functionapp.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildId)'
