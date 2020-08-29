@@ -60,7 +60,7 @@ import com.microsoft.azure.storage.file.ListFileItem;
 
 public class HttpTriggerBlobFunction {
 
-    public static final String storageConnectionString ="DefaultEndpointsProtocol=http;AccountName=storageaccountappse9f37;AccountKey=V7MpL3NoZpHnz26xRIT9wlcARKuMM1E4W+ZSRuNJfOnjGTS47coDRYFs3FxCcc/abyJzYZJZcP7e30gBu3JO0w==";
+    public static final String storageConnectionString ="DefaultEndpointsProtocol=http;AccountName=3a4bfe458e20475eb0d8;AccountKey=Fbh64hGTxXygjXpiI+3VTaHB0wN/HIgEGP2CZgYoZUkdYnuV+rBAYo2s3mD6V0Az07kmnIWN/xk7s8yABTYCyA==";
 
       static Logger LOGGER = LoggerFactory.getLogger(HttpTriggerBlobFunction.class);
 	    File sourceFile = null,uploadFile=null;
@@ -106,7 +106,7 @@ public class HttpTriggerBlobFunction {
         context.getLogger().info("blob operation started");
     
 		context.getLogger().info("Azure Blob storage quick start sample");
-        String storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=storageaccountappse9f37;AccountKey=V7MpL3NoZpHnz26xRIT9wlcARKuMM1E4W+ZSRuNJfOnjGTS47coDRYFs3FxCcc/abyJzYZJZcP7e30gBu3JO0w==";
+      //  String storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=storageaccountappse9f37;AccountKey=V7MpL3NoZpHnz26xRIT9wlcARKuMM1E4W+ZSRuNJfOnjGTS47coDRYFs3FxCcc/abyJzYZJZcP7e30gBu3JO0w==";
  		CloudStorageAccount storageAccount;
  		CloudBlobClient blobClient = null;
  		CloudBlobContainer container=null;

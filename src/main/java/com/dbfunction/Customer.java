@@ -12,11 +12,11 @@ public class Customer implements Serializable{
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getUser_id() {
-		return user_id;
+	public int getuserid() {
+		return userid;
 	}
-	public void setUser_id(int user_id) {
-		this.user_id = user_id;
+	public void setuserid(int userid) {
+		this.userid = userid;
 	}
 	public String getEmail() {
 		return email;
@@ -43,7 +43,7 @@ public class Customer implements Serializable{
 		this.fullname = fullname;
 	}
 	private int id=0;
-	private int user_id=0;
+	private int userid=0;
 	
 	private String email=null;
 	

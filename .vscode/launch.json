@@ -8,6 +8,11 @@
       "hostName": "127.0.0.1",
       "port": 5005,
       "preLaunchTask": "func: host start"
+    },
+    {
+      "name": "Local Process with Kubernetes (Preview)",
+      "type": "dev-spaces-connect-configuration",
+      "request": "launch"
     }
   ]
 }

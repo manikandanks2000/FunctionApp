@@ -4,5 +4,7 @@
   "azureFunctions.projectRuntime": "~3",
   "debug.internalConsoleOptions": "neverOpen",
   "azureFunctions.preDeployTask": "package",
-  "azureFunctions.templateFilter": "All"
+  "azureFunctions.templateFilter": "All",
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "vscode-pull-requests-azure-devops.collection": "widnow-terminal"
 }

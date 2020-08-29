@@ -36,8 +36,8 @@ public class HttpTriggerSQLFunction {
 			@QueueOutput(name = "httpQueue", queueName = "httpRequestQueue", connection = "AzureWebJobsStorage") final OutputBinding<Customer> result) {
 		context.getLogger().info("Java HTTP trigger DB operations processed in this request.");
 		String selectresult="";
-		String connectionUrl = "jdbc:sqlserver://manisqlserver.database.windows.net:1433;" + "database=manisqldatabase;"
-				+ "user=dbuser;" + "password=mani4YOU!@;" + "encrypt=true;" + "trustServerCertificate=true;"
+		String connectionUrl = "jdbc:sqlserver://manidbserver.database.windows.net:1433;" + "database=manidb;"
+				+ "user=azureuser;" + "password=mani4YOU;" + "encrypt=true;" + "trustServerCertificate=true;"
 				+ "loginTimeout=30;";
 		Connection connection;
 		try {
@@ -87,7 +87,7 @@ public class HttpTriggerSQLFunction {
 	 public void insertQuery(Connection conn,int userid,String fname,String lname,String fullname,String emailaddress) {
 	 
 	 	try {	
-		String sql = "insert into Customer(user_id,fname, lname, fullname, email) VALUES (?,?, ?, ?, ?)";
+		String sql = "insert into Customer(userid,fname, lname, fullname, email) VALUES (?,?, ?, ?, ?)";
 		
 		PreparedStatement statement = conn.prepareStatement(sql);
 		statement.setInt(1, userid);
@@ -112,7 +112,7 @@ public class HttpTriggerSQLFunction {
 	 public void deleteQuery(Connection conn,int userid) {
 		 
 		 	try {	
-			String sql = "DELETE FROM Customer WHERE user_id=?";
+			String sql = "DELETE FROM Customer WHERE userid=?";
 			
 			PreparedStatement statement = conn.prepareStatement(sql);
 			statement.setInt(1,userid);
@@ -130,7 +130,7 @@ public class HttpTriggerSQLFunction {
 	 public void updateQuery(Connection conn,int userid,String fname,String lname,String fullname,String email) {
 		 
 		 	try {	
-				String sql = "UPDATE Customer SET fname=?,lname=?, fullname=?, email=? WHERE user_id=?";
+				String sql = "UPDATE Customer SET fname=?,lname=?, fullname=?, email=? WHERE userid=?";
 			
 			PreparedStatement statement = conn.prepareStatement(sql);
 		

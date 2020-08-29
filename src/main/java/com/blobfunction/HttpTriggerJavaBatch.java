@@ -134,7 +134,7 @@ public class HttpTriggerJavaBatch {
 				context.getLogger().info("Java batch failed");		
 				
 			}
-    	 	return request.createResponseBuilder(HttpStatus.OK).body("Azure FileShare service\n"+"CurrentFile Content:"+"\n"+currentfilestr+"\n"+"NewFile Content based on DB query and Java processing the data :"+"\n"+newfilecontent).build();
+    	 	return request.createResponseBuilder(HttpStatus.OK).body("Azure FileShare service based on DB qeury before change \n"+"CurrentFile Content:"+"\n"+currentfilestr+"\n"+"NewFile Content based on DB query and Java processing the data :"+"\n"+newfilecontent).build();
           }
 
 
@@ -209,7 +209,7 @@ public class HttpTriggerJavaBatch {
 	 public String  selectQuery(Connection connection,int userid) {
 
 			ResultSet resultSet = null;
-			String selectsql = "select fname from Customer where user_id="+""+userid+"";
+			String selectsql = "select fname from Customer where userid="+""+userid+"";
 			
 			String str="";
 			try  {

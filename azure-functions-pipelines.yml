@@ -1,41 +1,32 @@
-# Maven
-# Build your Java project and run tests with Apache Maven.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/java
-
-trigger:
-- master
-
-pool:
-  vmImage: 'ubuntu-latest'
-
-steps:
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.8'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'package'
-
-
-- task: AzureFunctionApp@1
-  inputs:
-    azureSubscription: 'ManiSubscription(c80dc98e-f2db-444d-8f96-717d1999c4f8)'
-    appType: functionAppLinux
-    appName: 'java-functions-20200504231146325'
-    package: $(System.ArtifactsDirectory)/**/*.jar
-    deployToSlotOrASE: true
-    resourceGroupName: 'java-functions-group'
-    slotName: staging
-
-- task: AzureAppServiceManage@0
-  inputs:
-    azureSubscription: 'ManiSubscription(c80dc98e-f2db-444d-8f96-717d1999c4f8)'
-    WebAppName: 'java-functions-app-service-plan'
-    ResourceGroupName: 'java-functions-group'
-    SourceSlot: staging
-    SwapWithProduction: true    
+apiVersion : apps/v1beta1
+kind: Deployment
+metadata:
+  name: "kubernetesfunctions"
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: "kubernetesfunctions"
+    spec:
+      containers:
+        - name: "kubernetesfunctions"
+          image: "functionapp.azurecr.io/kubernetesfunctions:1.0"
+          ports:
+          - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: "kubernetesfunctions"
+    labels:
+        app: "kubernetesfunctions"
+spec:
+    type: LoadBalancer
+    ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+    selector:
+        app: "kubernetesfunctions"          
